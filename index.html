@@ -329,11 +329,12 @@ function fc(f){const b=document.createElement('button');b.className='fc box'+(f.
  b.onclick=()=>f.on?morph(f.id,b):toast(f.n+' segera hadir');return b;}
 FE.filter(f=>['pdf','pdf2word','merge','sign'].includes(f.id)).forEach(f=>$('quick').appendChild(fc(f)));FE.forEach(f=>$('allf').appendChild(fc(f)));
 let tt;function toast(t){const e=$('toast');e.textContent=t;e.hidden=false;clearTimeout(tt);tt=setTimeout(()=>e.hidden=true,1800)}
-function go(s){document.querySelectorAll('.scr').forEach(e=>e.hidden=e.id!=='s-'+s);
+let cur='home',lastTab='home';
+function go(s){cur=s;if(s==='home'||s==='menu')lastTab=s;document.querySelectorAll('.scr').forEach(e=>e.hidden=e.id!=='s-'+s);
  const t=s==='home'||s==='menu';$('nav').hidden=!t;$('nav').dataset.t=s;document.body.classList.toggle('focus',!t);$('n-home').className=s==='home'?'on':'';$('n-menu').className=s==='menu'?'on':'';window.scrollTo(0,0);}
 $('n-home').onclick=()=>morph('home');$('n-menu').onclick=()=>morph('menu');
 $('hgo').onclick=()=>morph('pdf',$('hgo'));$('hall').onclick=()=>morph('menu');
-document.querySelectorAll('[data-back]').forEach(b=>b.onclick=()=>morph('home'));
+document.querySelectorAll('[data-back]').forEach(b=>b.onclick=()=>morph(lastTab));
 let sd=0;function enter(){if(sd)return;sd=1;go('home');$('splash').classList.add('out');setTimeout(()=>$('splash').hidden=true,450)}
 $('splash').onclick=enter;$('splash').onkeydown=e=>{if(e.key==='Enter'||e.key===' ')enter()};setTimeout(enter,2600);
 
@@ -401,7 +402,7 @@ async function rawDl(){
   try{const d=window.claude&&window.claude.use?await window.claude.use('downloads'):null;if(d)return d}catch(e){}
   return{save:async({filename,data})=>{const u=URL.createObjectURL(data),a=document.createElement('a');a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);return{status:'saved'}}};
 }
-async function getDl(){const d=await rawDl();return d?{save:async o=>{const r=await d.save(o);try{celebrate(o.filename,o.data&&o.data.size)}catch(e){}return r}}:null}
+async function getDl(){const d=await rawDl();return d?{save:async o=>{busyEnd();const r=await d.save(o);try{celebrate(o.filename,o.data&&o.data.size)}catch(e){}return r}}:null}
 const NODL='Penyimpanan tidak tersedia di tampilan ini. Buka halaman ini langsung di claude.ai atau aplikasi Claude.';
 async function makePdf(){
   const {jsPDF}=window.jspdf||{};
@@ -623,6 +624,24 @@ function sorry(msg){const old=$('ov');if(old)old.remove();const o=document.creat
   if(navigator.vibrate&&document.documentElement.dataset.anim!=='off')try{navigator.vibrate(60)}catch(e){}
   document.body.appendChild(o)}
 window.addEventListener('unhandledrejection',()=>busyEnd());
+let exiting=false;
+function guard(){try{history.pushState({ss:1},'','#app')}catch(e){}}
+function askExit(){const o=document.createElement('div');o.id='xo';o.className='ov';o.setAttribute('role','alertdialog');
+  const c=document.createElement('div');c.className='oc sad';c.innerHTML='<div class="mv">'+MAS('sad')+'</div><h2>Gajadi nih?</h2><p class="mut">Tugasmu belum kelar, lho. Mau lanjut sat set?</p><div class="row" style="margin-top:14px"></div>';
+  const r=c.querySelector('.row'),a=document.createElement('button'),b=document.createElement('button');
+  a.className='btn p';a.textContent='Lanjut dulu';a.style.minWidth='0';a.onclick=()=>o.remove();
+  b.className='btn';b.textContent='Keluar';b.style.minWidth='0';b.onclick=()=>{o.remove();exiting=true;try{history.back()}catch(e){}toast('Gesek kembali sekali lagi untuk keluar')};
+  r.append(a,b);o.appendChild(c);o.onclick=e=>{if(e.target===o)o.remove()};document.body.appendChild(o)}
+window.addEventListener('popstate',()=>{
+  if(exiting)return;
+  guard();
+  if(!sd||bzO)return;
+  const x=$('xo');if(x){x.remove();return}
+  const ov=$('ov');if(ov){ov.remove();return}
+  if(cur==='home')askExit();else go(lastTab);
+});
+document.addEventListener('pointerdown',()=>{if(exiting){exiting=false;guard()}},true);
+guard();
 render();
 if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
