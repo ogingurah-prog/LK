@@ -165,6 +165,16 @@ input[type=range]{width:100%;accent-color:var(--focus)}
     <button class="btn p" id="csave" style="width:100%" disabled>Simpan foto kecil</button>
     <div class="msg" id="cmsg" role="status"></div>
   </section>
+  <section id="s-pdf2word" class="scr" hidden>
+    <div class="bar"><button class="bk" data-back aria-label="Kembali">←</button><h2>PDF ke Word</h2><span class="fm">Mode fokus</span></div>
+    <div class="card box">
+      <div class="btn p pick">+ Pilih file PDF<input type="file" id="wf" accept="application/pdf,.pdf" aria-label="Pilih file PDF"></div>
+      <div class="msg" id="winfo">Belum ada file dipilih.</div>
+      <p class="mut" style="margin-top:10px">Yang terbawa: teks dan paragraf. Yang belum: gambar, tabel, dan tata letak asli. PDF hasil scan (berupa foto) belum bisa dibaca.</p>
+    </div>
+    <button class="btn p" id="wgo" style="width:100%" disabled>Ubah ke Word</button>
+    <div class="msg" id="wmsg" role="status"></div>
+  </section>
 </main>
 
 <nav class="nav box" id="nav" data-t="home" hidden>
@@ -181,6 +191,7 @@ const ico=p=>`<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke
 const FE=[
 {id:'pdf',n:'Foto ke PDF',d:'Gabung foto jadi satu PDF',c:'var(--lime)',on:1,i:'<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M12 12v6M9 15h6"/>'},
 {id:'compress',n:'Kompres Foto',d:'Perkecil ukuran foto',c:'var(--pink)',on:1,i:'<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5M9 9l6 6"/>'},
+{id:'pdf2word',n:'PDF ke Word',d:'Ubah teks PDF jadi dokumen Word',c:'var(--sky)',on:1,i:'<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>'},
 {id:'merge',n:'Gabung PDF',d:'Satukan beberapa PDF',c:'var(--yel)',i:'<rect x="3" y="4" width="10" height="13" rx="2"/><rect x="11" y="8" width="10" height="13" rx="2"/>'},
 {id:'shrink',n:'Kompres PDF',d:'Pas batas ukuran upload',c:'var(--sky)',i:'<path d="M7 3h7l5 5v13H7z"/><path d="M10 13l3 3 3-3M13 10v6"/>'},
 {id:'split',n:'Pisah PDF',d:'Ambil halaman tertentu',c:'var(--lil)',i:'<path d="M12 3v18"/><rect x="3" y="6" width="6" height="12" rx="1.5"/><rect x="15" y="6" width="6" height="12" rx="1.5"/>'},
@@ -315,6 +326,56 @@ $('csave').onclick=async()=>{
   try{await dl.save({filename:cz.name+'-kecil.jpg',data:czB});$('cmsg').textContent='Tersimpan.';}
   catch(e){$('cmsg').textContent=e&&e.code==='declined'?'Penyimpanan dibatalkan.':'Gagal menyimpan foto.';}
 };
+const loadJS=src=>new Promise((ok,no)=>{const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=()=>no(new Error('load'));document.head.appendChild(s)});
+let w2=null;
+$('wf').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f)return;w2=f;$('winfo').textContent=f.name+' ('+kb(f.size)+')';$('wgo').disabled=false;$('wmsg').textContent='';};
+const xesc=t=>t.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+async function p2w(){
+  const m=$('wmsg');$('wgo').disabled=true;
+  try{
+    m.textContent='Menyiapkan alat...';
+    const B='https://cdnjs.cloudflare.com/ajax/libs/',PJ=B+'pdf.js/3.11.174/';
+    if(!window.pdfjsLib){await loadJS(PJ+'pdf.min.js');await loadJS(PJ+'pdf.worker.min.js');pdfjsLib.GlobalWorkerOptions.workerSrc=PJ+'pdf.worker.min.js';}
+    if(!window.JSZip)await loadJS(B+'jszip/3.10.1/jszip.min.js');
+    const pdf=await pdfjsLib.getDocument({data:await w2.arrayBuffer()}).promise;
+    let body='',chars=0;
+    for(let n=1;n<=pdf.numPages;n++){
+      m.textContent='Membaca halaman '+n+' dari '+pdf.numPages+'...';
+      const tc=await(await pdf.getPage(n)).getTextContent();
+      const its=tc.items.filter(i=>i.str).map(i=>({s:i.str,x:i.transform[4],y:i.transform[5],h:Math.abs(i.transform[3])||i.height||10,w:i.width||0})).sort((a,b)=>b.y-a.y);
+      const raw=[];
+      its.forEach(it=>{const l=raw[raw.length-1];if(l&&Math.abs(l.y-it.y)<=Math.max(2,it.h*.5))l.it.push(it);else raw.push({y:it.y,it:[it]})});
+      const lines=raw.map(l=>{l.it.sort((a,b)=>a.x-b.x);let t='',p=null;
+        l.it.forEach(i=>{if(p&&i.x-(p.x+p.w)>.2*i.h&&!/\s$/.test(t)&&!/^\s/.test(i.s))t+=' ';t+=i.s;p=i});
+        return{y:l.y,x0:l.it[0].x,x1:Math.max(...l.it.map(i=>i.x+i.w)),h:Math.max(...l.it.map(i=>i.h)),t:t.trim()}}).filter(l=>l.t);
+      const paras=[];
+      if(lines.length){
+        const mn=Math.min(...lines.map(l=>l.x0)),mx=Math.max(...lines.map(l=>l.x1));
+        lines.forEach((l,i)=>{const pv=lines[i-1];
+          if(!pv||pv.y-l.y>1.6*Math.max(pv.h,l.h)||pv.x1<mn+.72*(mx-mn))paras.push({t:l.t,h:l.h});
+          else{const q=paras[paras.length-1];q.t+=' '+l.t;q.h=Math.max(q.h,l.h)}});
+      }
+      if(!paras.length)paras.push({t:'',h:11});
+      paras.forEach((p,i)=>{chars+=p.t.length;const sz=Math.min(72,Math.max(16,Math.round(p.h*2)));
+        body+='<w:p><w:pPr>'+(n>1&&i===0?'<w:pageBreakBefore/>':'')+'<w:spacing w:after="120"/></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:cs="Calibri"/><w:sz w:val="'+sz+'"/></w:rPr><w:t xml:space="preserve">'+xesc(p.t)+'</w:t></w:r></w:p>'});
+    }
+    if(chars<20){m.textContent='PDF ini tidak punya teks yang bisa diambil (kemungkinan hasil scan atau foto). Fitur ini belum bisa membaca tulisan dari gambar.';$('wgo').disabled=false;return;}
+    m.textContent='Menyusun file Word...';
+    const H='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>',z=new JSZip();
+    z.file('[Content_Types].xml',H+'<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>');
+    z.file('_rels/.rels',H+'<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>');
+    z.file('word/document.xml',H+'<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>'+body+'<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" w:header="709" w:footer="709" w:gutter="0"/></w:sectPr></w:body></w:document>');
+    const blob=await z.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+    const name=w2.name.replace(/\.pdf$/i,'').replace(/[\\/:*?"<>|]/g,'_')||'Dokumen';
+    const dl=await getDl();
+    if(!dl){m.textContent='File Word jadi ('+kb(blob.size)+'). '+NODL;}
+    else{await dl.save({filename:name+'.docx',data:blob});m.textContent='Selesai. '+pdf.numPages+' halaman diubah ke Word ('+kb(blob.size)+').';}
+  }catch(e){
+    m.textContent=e&&e.code==='declined'?'Penyimpanan dibatalkan.':(e&&e.name==='PasswordException'?'PDF ini diproteksi kata sandi.':'Gagal mengubah PDF. Pastikan file PDF valid dan internet aktif, lalu coba lagi.');
+  }
+  $('wgo').disabled=!w2;
+}
+$('wgo').onclick=p2w;
 render();
 if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
