@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lembarku</title>
+<meta name="theme-color" content="#1f6feb">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lembarku">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&display=swap">
+<style>
+:root{--bg1:#eaf0fb;--bg2:#dbe6f8;--ink:#12141a;--mut:#58607a;--focus:#2f6bff;--focus2:#1c4fd6;--glass:rgba(255,255,255,.5);--sheen:rgba(255,255,255,.55);--gb:rgba(255,255,255,.75);--gs:rgba(40,70,140,.16);--hl:rgba(255,255,255,.9);--field:rgba(255,255,255,.55);--dg:#c0392b;color-scheme:light;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--ease:cubic-bezier(.2,.8,.2,1);--spring:cubic-bezier(.3,1.25,.4,1)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#0a0f1f;--bg2:#101a33;--ink:#eef1f8;--mut:#a3adc2;--focus:#5b8cff;--focus2:#9db9ff;--glass:rgba(255,255,255,.07);--sheen:rgba(255,255,255,.14);--gb:rgba(255,255,255,.17);--gs:rgba(0,0,0,.5);--hl:rgba(255,255,255,.22);--field:rgba(255,255,255,.07);--dg:#ff7b6b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg1:#0a0f1f;--bg2:#101a33;--ink:#eef1f8;--mut:#a3adc2;--focus:#5b8cff;--focus2:#9db9ff;--glass:rgba(255,255,255,.07);--sheen:rgba(255,255,255,.14);--gb:rgba(255,255,255,.17);--gs:rgba(0,0,0,.5);--hl:rgba(255,255,255,.22);--field:rgba(255,255,255,.07);--dg:#ff7b6b;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg1);color:var(--ink);font:16px/1.45 "Bricolage Grotesque",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body::before{content:"";position:fixed;inset:0;z-index:-1;transition:opacity .8s ease;background:radial-gradient(520px 420px at 12% 8%,rgba(47,107,255,.34),transparent 62%),radial-gradient(460px 400px at 95% 38%,rgba(110,165,255,.3),transparent 62%),radial-gradient(520px 440px at 28% 98%,rgba(47,107,255,.2),transparent 62%),linear-gradient(160deg,var(--bg1),var(--bg2))}
+body.focus::before{opacity:.4}
+main{max-width:640px;margin:0 auto;padding:16px 16px 120px}
+[hidden]{display:none!important}
+h1,h2,h3{margin:0;letter-spacing:-.4px;font-weight:700}
+h2{font-size:1.7rem;line-height:1.12}h3{font-size:1.05rem}
+p{margin:0}.mut{color:var(--mut);font-size:.92rem}
+button,select,input[type=text]{font:inherit;color:var(--ink)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.box{background:linear-gradient(135deg,var(--sheen),transparent 45%),var(--glass);-webkit-backdrop-filter:blur(22px) saturate(170%);backdrop-filter:blur(22px) saturate(170%);border:1px solid var(--gb);border-radius:24px;box-shadow:0 10px 32px var(--gs),inset 0 1px 0 var(--hl)}
+.card{padding:16px;margin-bottom:16px}
+.btn{flex:1;min-width:140px;padding:13px;border-radius:18px;border:1px solid var(--gb);background:linear-gradient(135deg,var(--sheen),transparent 60%),var(--glass);-webkit-backdrop-filter:blur(16px) saturate(170%);backdrop-filter:blur(16px) saturate(170%);box-shadow:0 6px 18px var(--gs),inset 0 1px 0 var(--hl);cursor:pointer;font-weight:600;text-align:center;transition:transform .4s var(--spring),box-shadow .4s var(--ease),filter .3s}
+@media (hover:hover){.btn:hover{transform:translateY(-2px);box-shadow:0 12px 26px var(--gs),inset 0 1px 0 var(--hl)}}
+.btn:active{transform:scale(.96);transition-duration:.12s}
+.btn.p{background:linear-gradient(180deg,#3d79ff,#1f4fd8);border-color:rgba(255,255,255,.35);color:#fff;box-shadow:0 10px 24px rgba(47,107,255,.38),inset 0 1px 0 rgba(255,255,255,.5)}
+.btn.l{background:rgba(255,255,255,.92);color:#173a9c;border-color:#fff;box-shadow:0 8px 20px rgba(10,30,100,.25),inset 0 1px 0 #fff}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:14px}.top h1{font-size:1.5rem}
+.hero{color:#fff;padding:22px;margin:8px 0 22px;position:relative;overflow:hidden;background:linear-gradient(145deg,#3f7bff,#1d4bd0);border:1px solid rgba(255,255,255,.4);border-radius:28px;box-shadow:0 20px 44px rgba(47,107,255,.38),inset 0 1px 0 rgba(255,255,255,.5)}
+.hero>*{position:relative;z-index:1}.hero p{max-width:66%;margin:8px 0 16px;line-height:1.4}
+.hero::after,.hero::before{content:"";position:absolute;border-radius:50%;background:radial-gradient(circle at 30% 28%,rgba(255,255,255,.55),rgba(255,255,255,.06) 62%);border:1px solid rgba(255,255,255,.4)}
+.hero::after{right:-34px;bottom:-40px;width:160px;height:160px}.hero::before{right:62px;top:-26px;width:80px;height:80px}
+.hero .btn{flex:none;min-width:0;padding:12px 20px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:12px 0 18px}
+.fc{position:relative;min-height:152px;padding:14px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:6px;color:var(--ink);transition:transform .45s var(--spring),box-shadow .4s var(--ease)}
+@media (hover:hover){.fc:hover{transform:translateY(-3px)}}
+.fc:active{transform:scale(.96);transition-duration:.12s}
+.fc small{font-size:.82rem;line-height:1.3;color:var(--mut)}.fc b{font-size:1.08rem;line-height:1.15}
+.ic{width:46px;height:46px;border-radius:16px;display:grid;place-items:center;margin-bottom:6px;color:var(--focus);background:rgba(47,107,255,.14);border:1px solid rgba(47,107,255,.28);box-shadow:inset 0 1px 0 var(--hl)}
+.bd{position:absolute;top:12px;right:12px;font-size:.7rem;font-weight:600;padding:3px 10px;border-radius:99px;color:var(--focus2);background:rgba(47,107,255,.14);border:1px solid rgba(47,107,255,.28)}
+.fc.soon .bd{color:var(--mut);background:transparent;border-color:var(--gb)}
+.fc.soon .ic{color:var(--mut);background:rgba(128,135,160,.14);border-color:var(--gb)}
+.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));width:min(340px,calc(100% - 32px));display:flex;padding:6px;border-radius:99px;z-index:5}
+.nav::before{content:"";position:absolute;top:6px;bottom:6px;left:6px;width:calc(50% - 6px);border-radius:99px;background:linear-gradient(180deg,#3d79ff,#1f4fd8);box-shadow:0 6px 16px rgba(47,107,255,.45),inset 0 1px 0 rgba(255,255,255,.45);transition:transform .5s var(--spring)}
+.nav[data-t="menu"]::before{transform:translateX(100%)}
+.nav button{position:relative;flex:1;padding:11px;border-radius:99px;border:0;background:none;font-weight:600;cursor:pointer;color:var(--ink);transition:color .3s,transform .3s var(--spring)}
+.nav button:active{transform:scale(.94)}.nav button.on{color:#fff}
+.bar{display:flex;align-items:center;gap:12px;margin-bottom:16px}.bar h2{font-size:1.4rem}
+.fm{margin-left:auto;display:inline-flex;align-items:center;gap:7px;font-size:.78rem;font-weight:600;color:var(--focus2);background:rgba(47,107,255,.12);border:1px solid rgba(47,107,255,.3);padding:5px 12px;border-radius:99px;white-space:nowrap}
+.fm::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--focus)}
+.bk{flex:none;width:44px;height:44px;border-radius:50%;font-size:1.15rem;cursor:pointer;border:1px solid var(--gb);background:linear-gradient(135deg,var(--sheen),transparent 60%),var(--glass);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 6px 16px var(--gs),inset 0 1px 0 var(--hl);transition:transform .4s var(--spring)}
+.bk:active{transform:scale(.9);transition-duration:.12s}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.it{border:1px solid var(--gb);border-radius:16px;overflow:hidden;background:var(--glass)}
+.th{height:130px;display:flex;align-items:center;justify-content:center;background:rgba(128,135,160,.16);position:relative}
+.th canvas{max-width:100%;max-height:100%}
+.nm{position:absolute;left:6px;top:6px;background:rgba(18,20,26,.72);color:#fff;font-size:.72rem;padding:1px 8px;border-radius:9px}
+.ac{display:flex}
+.ac button{flex:1;border:0;border-top:1px solid var(--gb);background:transparent;padding:10px 0;font-size:1rem;cursor:pointer;transition:background .25s,transform .3s var(--spring)}
+.ac button+button{border-left:1px solid var(--gb)}.ac button:active{background:rgba(47,107,255,.18);transform:scale(.92)}.ac .x{color:var(--dg)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label{display:block;font-size:.8rem;color:var(--mut);margin-bottom:4px;font-weight:500}
+select,input[type=text]{width:100%;padding:10px;border-radius:14px;border:1px solid var(--gb);background:var(--field);transition:box-shadow .3s}
+input[type=range]{width:100%;accent-color:var(--focus)}
+.msg{margin-top:10px;font-size:.92rem;color:var(--mut);min-height:1.3em}
+.empty{text-align:center;color:var(--mut);padding:22px 8px}
+.pick{position:relative;overflow:hidden}
+.pick input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;font-size:0}
+.pv{display:flex;justify-content:center;margin:12px 0}.pv canvas{max-width:100%;max-height:260px;border:1px solid var(--gb);border-radius:16px;box-shadow:0 8px 24px var(--gs)}
+.scr{animation:in .5s var(--ease)}
+@keyframes in{from{opacity:0;transform:translateY(14px) scale(.985)}}
+.splash{position:fixed;inset:0;z-index:50;background:radial-gradient(500px 400px at 80% 10%,rgba(255,255,255,.22),transparent 60%),linear-gradient(160deg,#3f7bff,#1d4bd0);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;cursor:pointer;transition:opacity .5s ease,transform .5s var(--ease);overflow:hidden}
+.splash.out{opacity:0;transform:scale(1.05);pointer-events:none}
+.splash .lg{animation:pop .9s var(--spring) both}
+.splash h1{font-size:3rem;animation:up .7s .35s var(--ease) both}.splash p{font-size:1.1rem;font-weight:500;animation:up .7s .5s var(--ease) both}.splash small{margin-top:26px;font-weight:600;animation:up .7s .9s var(--ease) both}
+.splash .d{position:absolute;border-radius:50%;width:160px;height:160px;left:-44px;top:10%;background:radial-gradient(circle at 30% 28%,rgba(255,255,255,.5),rgba(255,255,255,.05) 65%);border:1px solid rgba(255,255,255,.35)}
+.splash .d+.d{width:116px;height:116px;left:auto;right:-30px;top:auto;bottom:14%}
+@keyframes pop{0%{transform:scale(.3) rotate(-14deg);opacity:0}100%{transform:none;opacity:1}}
+@keyframes up{from{opacity:0;transform:translateY(14px)}}
+.toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);background:rgba(18,20,26,.85);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:#fff;padding:10px 18px;border-radius:99px;font-weight:600;font-size:.9rem;z-index:20;white-space:nowrap;animation:up .4s var(--ease)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="splash" id="splash" role="button" tabindex="0" aria-label="Masuk ke Lembarku">
+  <i class="d"></i><i class="d"></i>
+  <span class="lg" data-logo="124"></span>
+  <h1>Lembarku</h1>
+  <p>Tugas beres, hidup tenang.</p>
+  <small>Ketuk untuk masuk</small>
+</div>
+
+<main>
+  <section id="s-home" class="scr" hidden>
+    <div class="top"><span data-logo="42"></span><h1>Lembarku</h1></div>
+    <h2>Hai! Mau beresin apa hari ini?</h2>
+    <div class="hero box">
+      <h3>Foto ke PDF</h3>
+      <p>Jepret, urutkan, jadi satu PDF siap kirim ke guru atau dosen.</p>
+      <button class="btn l" id="hgo">Mulai sekarang →</button>
+    </div>
+    <h3>Pintasan</h3>
+    <div class="g2" id="quick"></div>
+    <div class="row"><button class="btn" id="hall">Lihat semua fitur →</button></div>
+  </section>
+
+  <section id="s-menu" class="scr" hidden>
+    <div class="top"><span data-logo="42"></span><h1>Menu Fitur</h1></div>
+    <p class="mut">Pilih alat yang kamu butuhin. Yang bertanda Segera lagi disiapkan.</p>
+    <div class="g2" id="allf"></div>
+  </section>
+
+  <section id="s-pdf" class="scr" hidden>
+    <div class="bar"><button class="bk" data-back aria-label="Kembali">←</button><h2>Foto ke PDF</h2><span class="fm">Mode fokus</span></div>
+    <div class="card box">
+      <div class="row">
+        <div class="btn p pick">+ Pilih foto<input type="file" id="f1" accept="image/*" multiple aria-label="Pilih foto"></div>
+        <div class="btn pick">Foto langsung<input type="file" id="f2" accept="image/*" capture="environment" aria-label="Foto langsung"></div>
+      </div>
+    </div>
+    <div class="card box">
+      <h3 style="margin-bottom:10px">Halaman (<span id="cnt">0</span>)</h3>
+      <div id="list" class="grid"></div>
+      <div id="empty" class="empty">Belum ada foto. Pilih beberapa foto, urutannya bisa diatur.</div>
+      <div class="row" style="margin-top:10px"><button class="btn" id="clr" disabled>Hapus semua</button></div>
+    </div>
+    <div class="card box">
+      <h3 style="margin-bottom:10px">Pengaturan</h3>
+      <div class="opts">
+        <div><label for="sz">Ukuran kertas</label><select id="sz"><option value="a4">A4</option><option value="letter">Letter</option><option value="fit">Sesuai foto</option></select></div>
+        <div><label for="mg">Margin</label><select id="mg"><option value="0">Tanpa margin</option><option value="8" selected>Kecil</option><option value="15">Sedang</option></select></div>
+        <div><label for="fl">Mode foto</label><select id="fl"><option value="none">Asli (berwarna)</option><option value="gray">Hitam putih (abu-abu)</option><option value="doc">Mode dokumen (tulisan tajam)</option></select></div>
+        <div><label for="ql">Kualitas / ukuran file</label><select id="ql"><option value="1000,0.6">Kecil (cocok untuk batas upload)</option><option value="1500,0.75" selected>Sedang</option><option value="2200,0.9">Tinggi</option></select></div>
+      </div>
+      <div style="margin-top:10px"><label for="fn">Nama file</label><input type="text" id="fn" value="Tugas" maxlength="60"></div>
+    </div>
+    <button class="btn p" id="go" style="width:100%" disabled>Buat PDF</button>
+    <div class="msg" id="msg" role="status"></div>
+  </section>
+
+  <section id="s-compress" class="scr" hidden>
+    <div class="bar"><button class="bk" data-back aria-label="Kembali">←</button><h2>Kompres Foto</h2><span class="fm">Mode fokus</span></div>
+    <div class="card box">
+      <div class="btn p pick">+ Pilih foto<input type="file" id="cf" accept="image/*" aria-label="Pilih foto untuk dikompres"></div>
+      <div class="pv" id="cpv"></div>
+      <div class="opts">
+        <div><label for="cd">Sisi terpanjang</label><select id="cd"><option value="800">800 px</option><option value="1200" selected>1200 px</option><option value="1600">1600 px</option><option value="2400">2400 px</option></select></div>
+        <div><label for="cq">Kualitas: <span id="cqv">70</span>%</label><input type="range" id="cq" min="30" max="95" value="70"></div>
+      </div>
+      <div class="msg" id="cinfo" role="status">Pilih satu foto dulu.</div>
+    </div>
+    <button class="btn p" id="csave" style="width:100%" disabled>Simpan foto kecil</button>
+    <div class="msg" id="cmsg" role="status"></div>
+  </section>
+</main>
+
+<nav class="nav box" id="nav" data-t="home" hidden>
+  <button id="n-home">Beranda</button><button id="n-menu">Fitur</button>
+</nav>
+<div class="toast" id="toast" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const $=id=>document.getElementById(id);
+const LOGO=(s,x='')=>`<svg width="${s}" height="${s}" viewBox="0 0 100 100" role="img" aria-label="Logo Lembarku" style="border-radius:${s*.24}px;${x}"><rect width="100" height="100" rx="24" fill="#1F6FEB"/><g transform="translate(-2 0)"><rect x="34" y="16" width="44" height="58" rx="7" fill="#fff" opacity="0.4"/><path d="M26 27a7 7 0 0 1 7-7h19l18 18v36a7 7 0 0 1-7 7H33a7 7 0 0 1-7-7z" fill="#fff"/><path d="M52 20v12a6 6 0 0 0 6 6h12z" fill="#BBD3FB"/><path d="M48 49v18M39 58h18" stroke="#1F6FEB" stroke-width="5.5" stroke-linecap="round" fill="none"/></g></svg>`;
+document.querySelectorAll('[data-logo]').forEach(e=>{const s=+e.dataset.logo;e.innerHTML=LOGO(s,s>100?'box-shadow:0 0 0 1px rgba(255,255,255,.55),0 22px 44px rgba(10,30,110,.45),inset 0 1px 0 rgba(255,255,255,.6)':'')});
+const ico=p=>`<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+const FE=[
+{id:'pdf',n:'Foto ke PDF',d:'Gabung foto jadi satu PDF',c:'var(--lime)',on:1,i:'<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M12 12v6M9 15h6"/>'},
+{id:'compress',n:'Kompres Foto',d:'Perkecil ukuran foto',c:'var(--pink)',on:1,i:'<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5M9 9l6 6"/>'},
+{id:'merge',n:'Gabung PDF',d:'Satukan beberapa PDF',c:'var(--yel)',i:'<rect x="3" y="4" width="10" height="13" rx="2"/><rect x="11" y="8" width="10" height="13" rx="2"/>'},
+{id:'shrink',n:'Kompres PDF',d:'Pas batas ukuran upload',c:'var(--sky)',i:'<path d="M7 3h7l5 5v13H7z"/><path d="M10 13l3 3 3-3M13 10v6"/>'},
+{id:'split',n:'Pisah PDF',d:'Ambil halaman tertentu',c:'var(--lil)',i:'<path d="M12 3v18"/><rect x="3" y="6" width="6" height="12" rx="1.5"/><rect x="15" y="6" width="6" height="12" rx="1.5"/>'},
+{id:'sign',n:'Tanda Tangan',d:'Bubuhkan di dokumen',c:'var(--peach)',i:'<path d="M4 18c3-8 5-9 6-5s3 3 5-2l1 4M4 21h16"/>'}];
+function fc(f){const b=document.createElement('button');b.className='fc box'+(f.on?'':' soon');
+ b.innerHTML=`<span class="bd">${f.on?'Siap':'Segera'}</span><span class="ic">${ico(f.i)}</span><b>${f.n}</b><small>${f.d}</small>`;
+ b.onclick=()=>f.on?go(f.id):toast(f.n+' segera hadir');return b;}
+FE.filter(f=>f.on).forEach(f=>$('quick').appendChild(fc(f)));FE.forEach(f=>$('allf').appendChild(fc(f)));
+let tt;function toast(t){const e=$('toast');e.textContent=t;e.hidden=false;clearTimeout(tt);tt=setTimeout(()=>e.hidden=true,1800)}
+function go(s){document.querySelectorAll('.scr').forEach(e=>e.hidden=e.id!=='s-'+s);
+ const t=s==='home'||s==='menu';$('nav').hidden=!t;$('nav').dataset.t=s;document.body.classList.toggle('focus',!t);$('n-home').className=s==='home'?'on':'';$('n-menu').className=s==='menu'?'on':'';window.scrollTo(0,0);}
+$('n-home').onclick=()=>go('home');$('n-menu').onclick=()=>go('menu');
+$('hgo').onclick=()=>go('pdf');$('hall').onclick=()=>go('menu');
+document.querySelectorAll('[data-back]').forEach(b=>b.onclick=()=>go('home'));
+let sd=0;function enter(){if(sd)return;sd=1;go('home');$('splash').classList.add('out');setTimeout(()=>$('splash').hidden=true,450)}
+$('splash').onclick=enter;$('splash').onkeydown=e=>{if(e.key==='Enter'||e.key===' ')enter()};setTimeout(enter,2600);
+
+let items=[],uid=0;
+function draw(it,max,filter){
+  const s=it.src,r=it.rot%360,sw=s.width,sh=s.height;
+  const rw=r%180?sh:sw,rh=r%180?sw:sh,k=Math.min(1,max/Math.max(rw,rh));
+  const w=Math.round(rw*k),h=Math.round(rh*k);
+  const c=document.createElement('canvas');c.width=w;c.height=h;
+  const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,w,h);
+  x.translate(w/2,h/2);x.rotate(r*Math.PI/180);x.drawImage(s,-sw*k/2,-sh*k/2,sw*k,sh*k);
+  if(filter!=='none'){
+    const d=x.getImageData(0,0,w,h),p=d.data;
+    for(let i=0;i<p.length;i+=4){
+      let g=.299*p[i]+.587*p[i+1]+.114*p[i+2];
+      if(filter==='doc')g=(g-135)*1.9+135+25;
+      g=g<0?0:g>255?255:g;p[i]=p[i+1]=p[i+2]=g;
+    }
+    x.putImageData(d,0,0);
+  }
+  return c;
+}
+function load(file){
+  return new Promise(res=>{
+    const fr=new FileReader();fr.onerror=()=>res(null);
+    fr.onload=()=>{
+      const im=new Image();im.onerror=()=>res(null);
+      im.onload=()=>{
+        const k=Math.min(1,2400/Math.max(im.width,im.height));
+        const c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);
+        c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+        res({id:++uid,src:c,rot:0,name:file.name});
+      };
+      im.src=fr.result;
+    };
+    fr.readAsDataURL(file);
+  });
+}
+async function addFiles(files){
+  const arr=[...files].filter(f=>f.type.startsWith('image/'));
+  if(!arr.length)return;
+  $('msg').textContent='Memuat foto...';let bad=0;
+  for(const f of arr){const it=await load(f);it?items.push(it):bad++;}
+  $('msg').textContent=bad?bad+' file tidak bisa dibuka (format tidak didukung).':'';
+  render();
+}
+function render(){
+  const L=$('list');L.innerHTML='';const fl=$('fl').value;
+  items.forEach((it,i)=>{
+    const d=document.createElement('div');d.className='it';
+    const t=document.createElement('div');t.className='th';t.appendChild(draw(it,260,fl));
+    const n=document.createElement('span');n.className='nm';n.textContent=i+1;t.appendChild(n);
+    const a=document.createElement('div');a.className='ac';
+    [['◀',()=>mv(i,-1),'Geser kiri'],['▶',()=>mv(i,1),'Geser kanan'],['↻',()=>{it.rot=(it.rot+90)%360;render()},'Putar'],['✕',()=>{items.splice(i,1);render()},'Hapus']].forEach(([s,f,l],j)=>{
+      const b=document.createElement('button');b.textContent=s;b.title=l;b.setAttribute('aria-label',l);
+      if(j===3)b.className='x';b.onclick=f;a.appendChild(b);
+    });
+    d.append(t,a);L.appendChild(d);
+  });
+  $('cnt').textContent=items.length;$('empty').style.display=items.length?'none':'block';
+  $('go').disabled=$('clr').disabled=!items.length;
+}
+function mv(i,d){const j=i+d;if(j<0||j>=items.length)return;[items[i],items[j]]=[items[j],items[i]];render();}
+async function getDl(){
+  try{const d=window.claude&&window.claude.use?await window.claude.use('downloads'):null;if(d)return d}catch(e){}
+  return{save:async({filename,data})=>{const u=URL.createObjectURL(data),a=document.createElement('a');a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);return{status:'saved'}}};
+}
+const NODL='Penyimpanan tidak tersedia di tampilan ini. Buka halaman ini langsung di claude.ai atau aplikasi Claude.';
+async function makePdf(){
+  const {jsPDF}=window.jspdf||{};
+  if(!jsPDF){$('msg').textContent='Pustaka PDF gagal dimuat. Periksa koneksi internet lalu muat ulang halaman.';return;}
+  const dl=await getDl();
+  const [max,q]=$('ql').value.split(',').map(Number);
+  const fl=$('fl').value,mg=+$('mg').value,sz=$('sz').value;
+  const base={a4:[210,297],letter:[215.9,279.4]}[sz];
+  $('go').disabled=true;let pdf;
+  try{
+    for(let i=0;i<items.length;i++){
+      $('msg').textContent='Membuat halaman '+(i+1)+' dari '+items.length+'...';
+      await new Promise(r=>setTimeout(r,20));
+      const c=draw(items[i],max,fl),land=c.width>c.height;let pw,ph;
+      if(sz==='fit'){const m=210/Math.min(c.width,c.height);pw=c.width*m;ph=c.height*m;}
+      else{pw=land?base[1]:base[0];ph=land?base[0]:base[1];}
+      if(!pdf)pdf=new jsPDF({unit:'mm',format:[pw,ph],orientation:pw>ph?'l':'p',compress:true});
+      else pdf.addPage([pw,ph],pw>ph?'l':'p');
+      const m=sz==='fit'?0:mg,s=Math.min((pw-2*m)/c.width,(ph-2*m)/c.height),w=c.width*s,h=c.height*s;
+      pdf.addImage(c.toDataURL('image/jpeg',q),'JPEG',(pw-w)/2,(ph-h)/2,w,h);
+    }
+    const blob=pdf.output('blob'),mb=(blob.size/1048576).toFixed(2).replace('.',',');
+    const name=($('fn').value.trim()||'Tugas').replace(/[\\/:*?"<>|]/g,'_');
+    if(!dl){$('msg').textContent='PDF jadi ('+mb+' MB). '+NODL;}
+    else{await dl.save({filename:name+'.pdf',data:blob});$('msg').textContent='Selesai. PDF '+items.length+' halaman, ukuran '+mb+' MB.';}
+  }catch(e){
+    $('msg').textContent=e&&e.code==='declined'?'Penyimpanan dibatalkan.':'Gagal membuat PDF. Coba kurangi jumlah foto atau pilih kualitas Kecil.';
+  }
+  $('go').disabled=!items.length;
+}
+$('f1').onchange=e=>{addFiles(e.target.files);e.target.value=''};
+$('f2').onchange=e=>{addFiles(e.target.files);e.target.value=''};
+$('clr').onclick=()=>{items=[];render();$('msg').textContent=''};
+$('fl').onchange=render;$('go').onclick=makePdf;
+
+let cz=null,czB=null,czT;
+const kb=n=>n>1048576?(n/1048576).toFixed(2).replace('.',',')+' MB':Math.round(n/1024)+' KB';
+function czUp(){clearTimeout(czT);czT=setTimeout(()=>{
+  if(!cz)return;const c=draw({src:cz.src,rot:0},+$('cd').value,'none');
+  $('cpv').innerHTML='';$('cpv').appendChild(c);
+  c.toBlob(b=>{czB=b;$('cinfo').textContent=kb(cz.size)+' → '+kb(b.size)+' ('+Math.max(0,Math.round(100-b.size/cz.size*100))+'% lebih kecil)';$('csave').disabled=false;},'image/jpeg',$('cq').value/100);
+},150)}
+$('cf').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+  $('cinfo').textContent='Memuat foto...';const it=await load(f);
+  if(!it){$('cinfo').textContent='Foto tidak bisa dibuka.';return;}
+  cz={src:it.src,name:f.name.replace(/\.[^.]+$/,''),size:f.size};czUp();};
+$('cd').onchange=czUp;$('cq').oninput=()=>{$('cqv').textContent=$('cq').value;czUp()};
+$('csave').onclick=async()=>{
+  const dl=await getDl();if(!czB)return;
+  if(!dl){$('cmsg').textContent=NODL;return;}
+  try{await dl.save({filename:cz.name+'-kecil.jpg',data:czB});$('cmsg').textContent='Tersimpan.';}
+  catch(e){$('cmsg').textContent=e&&e.code==='declined'?'Penyimpanan dibatalkan.':'Gagal menyimpan foto.';}
+};
+render();
+if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
