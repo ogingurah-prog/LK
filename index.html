@@ -624,24 +624,25 @@ function sorry(msg){const old=$('ov');if(old)old.remove();const o=document.creat
   if(navigator.vibrate&&document.documentElement.dataset.anim!=='off')try{navigator.vibrate(60)}catch(e){}
   document.body.appendChild(o)}
 window.addEventListener('unhandledrejection',()=>busyEnd());
-let exiting=false;
-function guard(){try{history.pushState({ss:1},'','#app')}catch(e){}}
+let exiting=false,depth=0;
+function push(){try{history.pushState({ss:1},'','#app');depth++}catch(e){}}
 function askExit(){const o=document.createElement('div');o.id='xo';o.className='ov';o.setAttribute('role','alertdialog');
   const c=document.createElement('div');c.className='oc sad';c.innerHTML='<div class="mv">'+MAS('sad')+'</div><h2>Gajadi nih?</h2><p class="mut">Tugasmu belum kelar, lho. Mau lanjut sat set?</p><div class="row" style="margin-top:14px"></div>';
   const r=c.querySelector('.row'),a=document.createElement('button'),b=document.createElement('button');
   a.className='btn p';a.textContent='Lanjut dulu';a.style.minWidth='0';a.onclick=()=>o.remove();
-  b.className='btn';b.textContent='Keluar';b.style.minWidth='0';b.onclick=()=>{o.remove();exiting=true;try{history.back()}catch(e){}toast('Gesek kembali sekali lagi untuk keluar')};
+  b.className='btn';b.textContent='Keluar';b.style.minWidth='0';
+  b.onclick=()=>{o.remove();exiting=true;const d=depth;depth=0;if(d>0){try{history.go(-d)}catch(e){}}toast('Gesek kembali sekali lagi untuk keluar')};
   r.append(a,b);o.appendChild(c);o.onclick=e=>{if(e.target===o)o.remove()};document.body.appendChild(o)}
 window.addEventListener('popstate',()=>{
   if(exiting)return;
-  guard();
+  depth=Math.max(0,depth-1);
   if(!sd||bzO)return;
   const x=$('xo');if(x){x.remove();return}
   const ov=$('ov');if(ov){ov.remove();return}
   if(cur==='home')askExit();else go(lastTab);
 });
-document.addEventListener('pointerdown',()=>{if(exiting){exiting=false;guard()}},true);
-guard();
+document.addEventListener('pointerdown',()=>{if(exiting)exiting=false;if(depth<3)push()},true);
+try{history.pushState({ss:1},'','#app')}catch(e){}
 render();
 if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
