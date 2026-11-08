@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Lembarku</title>
+<title>SatSet</title>
 <meta name="theme-color" content="#1f6feb">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Lembarku">
+<meta name="apple-mobile-web-app-title" content="SatSet">
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
@@ -95,17 +95,17 @@ input[type=range]{width:100%;accent-color:var(--focus)}
 </style>
 </head>
 <body>
-<div class="splash" id="splash" role="button" tabindex="0" aria-label="Masuk ke Lembarku">
+<div class="splash" id="splash" role="button" tabindex="0" aria-label="Masuk ke SatSet">
   <i class="d"></i><i class="d"></i>
   <span class="lg" data-logo="124"></span>
-  <h1>Lembarku</h1>
-  <p>Tugas beres, hidup tenang.</p>
+  <h1>SatSet</h1>
+  <p>Sat set, tugas kelar.</p>
   <small>Ketuk untuk masuk</small>
 </div>
 
 <main>
   <section id="s-home" class="scr" hidden>
-    <div class="top"><span data-logo="42"></span><h1>Lembarku</h1></div>
+    <div class="top"><span data-logo="42"></span><h1>SatSet</h1></div>
     <h2>Hai! Mau beresin apa hari ini?</h2>
     <div class="hero box">
       <h3>Foto ke PDF</h3>
@@ -185,7 +185,7 @@ input[type=range]{width:100%;accent-color:var(--focus)}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 const $=id=>document.getElementById(id);
-const LOGO=(s,x='')=>`<svg width="${s}" height="${s}" viewBox="0 0 100 100" role="img" aria-label="Logo Lembarku" style="border-radius:${s*.24}px;${x}"><rect width="100" height="100" rx="24" fill="#1F6FEB"/><g transform="translate(-2 0)"><rect x="34" y="16" width="44" height="58" rx="7" fill="#fff" opacity="0.4"/><path d="M26 27a7 7 0 0 1 7-7h19l18 18v36a7 7 0 0 1-7 7H33a7 7 0 0 1-7-7z" fill="#fff"/><path d="M52 20v12a6 6 0 0 0 6 6h12z" fill="#BBD3FB"/><path d="M48 49v18M39 58h18" stroke="#1F6FEB" stroke-width="5.5" stroke-linecap="round" fill="none"/></g></svg>`;
+const LOGO=(s,x='')=>`<svg width="${s}" height="${s}" viewBox="0 0 100 100" role="img" aria-label="Logo SatSet" style="border-radius:${s*.24}px;${x}"><rect width="100" height="100" rx="24" fill="#1F6FEB"/><path d="M9 42h12M5 53h14M9 64h12" stroke="#fff" stroke-opacity=".55" stroke-width="3.6" stroke-linecap="round"/><g transform="rotate(8 52 52)"><path d="M38 16H58L76 34V72a8 8 0 0 1-8 8H38a8 8 0 0 1-8-8V24a8 8 0 0 1 8-8Z" fill="#fff"/><path d="M58 16v12a6 6 0 0 0 6 6h12Z" fill="#BBD3FB"/><circle cx="43" cy="50" r="3.4" fill="#12306F"/><circle cx="61" cy="50" r="3.4" fill="#12306F"/><circle cx="42.4" cy="48.8" r="1" fill="#fff"/><circle cx="60.4" cy="48.8" r="1" fill="#fff"/><path d="M46.6 60.5A6 6 0 0 0 57.4 60.5" fill="none" stroke="#12306F" stroke-width="3" stroke-linecap="round"/><ellipse cx="37.5" cy="58" rx="3.8" ry="2.4" fill="#B0C9FF"/><ellipse cx="66.5" cy="58" rx="3.8" ry="2.4" fill="#B0C9FF"/></g><circle cx="76" cy="74" r="10" fill="#12306F" stroke="#fff" stroke-width="1.6"/><path d="M77 67 71 75.5h4.5L74 82l7-10h-4.5Z" fill="#fff"/></svg>`;
 document.querySelectorAll('[data-logo]').forEach(e=>{const s=+e.dataset.logo;e.innerHTML=LOGO(s,s>100?'box-shadow:0 0 0 1px rgba(255,255,255,.55),0 22px 44px rgba(10,30,110,.45),inset 0 1px 0 rgba(255,255,255,.6)':'')});
 const ico=p=>`<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
 const FE=[
