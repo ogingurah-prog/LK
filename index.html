@@ -160,6 +160,18 @@ html[data-anim="off"] *,html[data-anim="off"] *::before,html[data-anim="off"] *:
 @keyframes rl{from{transform:translateX(6px);opacity:0}30%{opacity:1}to{transform:translateX(-8px);opacity:0}}
 .oc.sad .mv svg{animation:shake .5s ease-in-out 2}
 @keyframes shake{25%{transform:rotate(-5deg)}75%{transform:rotate(5deg)}}
+textarea{width:100%;padding:10px;border-radius:14px;border:1px solid var(--gb);background:var(--field);font:inherit;color:var(--ink);resize:vertical}
+details summary{cursor:pointer;font-weight:600;padding:6px 0}
+#mtxt{max-height:260px;overflow:auto;font-size:.85rem;border:1px solid var(--gb);border-radius:12px;padding:8px 10px;margin-top:6px}
+#mtxt b{display:block;margin-top:8px}#mtxt div{margin:2px 0;color:var(--mut)}
+.ans{background:rgba(47,107,255,.12);border:1px solid rgba(47,107,255,.3);border-radius:14px;padding:10px 12px;font-weight:600;margin:8px 0}
+.warn{background:rgba(224,160,48,.16);border:1px solid rgba(224,160,48,.5);border-radius:14px;padding:10px 12px;margin:8px 0;font-size:.9rem}
+.qt{font-style:italic;color:var(--mut);font-size:.88rem;margin:2px 0 6px}
+.sh{margin:12px 0 4px;font-size:.82rem;color:var(--mut);font-weight:600}
+.badge{flex:none;font-size:.72rem;font-weight:600;padding:3px 10px;border-radius:99px;color:var(--focus2);background:rgba(47,107,255,.14);border:1px solid rgba(47,107,255,.28)}
+.chip{display:inline-block;border:1px solid var(--gb);background:var(--glass);border-radius:99px;padding:6px 12px;font-size:.82rem;font-weight:600;cursor:pointer;color:var(--ink);margin:4px 6px 2px 0}
+.sq{font-size:.82rem;color:var(--mut);margin:0 0 6px}
+.hl{background:rgba(255,216,77,.28);border-radius:8px;padding:6px 8px;margin:6px 0;font-size:.9rem}
 </style>
 </head>
 <body>
@@ -303,6 +315,44 @@ html[data-anim="off"] *,html[data-anim="off"] *::before,html[data-anim="off"] *:
     <button class="btn p" id="gsave" style="width:100%" disabled>Simpan PDF</button>
     <div class="msg" id="gmsg" role="status"></div>
   </section>
+  <section id="s-upscale" class="scr" hidden>
+    <div class="bar"><button class="bk" data-back aria-label="Kembali">←</button><h2>Upscale Foto</h2><span class="fm">Mode fokus</span></div>
+    <div class="card box">
+      <div class="btn p pick">+ Pilih foto<input type="file" id="uf" accept="image/*" aria-label="Pilih foto"></div>
+      <div class="msg" id="uinfo">Belum ada foto dipilih.</div>
+      <div class="opts" style="margin-top:12px">
+        <div><label for="ut">Target (sisi terpanjang)</label><select id="ut"><option value="1280">HD (1280 px)</option><option value="1920" selected>Full HD (1920 px)</option><option value="2560">2K (2560 px)</option><option value="3840">4K (3840 px)</option><option value="1772">Cetak 4R 10×15 cm (300 dpi)</option><option value="2480">Cetak A5 (300 dpi)</option><option value="3508">Cetak A4 (300 dpi)</option></select></div>
+        <div><label for="uo">Format hasil</label><select id="uo"><option value="jpg">JPG (lebih kecil)</option><option value="png">PNG (tanpa kompresi)</option></select></div>
+      </div>
+      <div style="margin-top:12px"><label for="us">Ketajaman: <span id="usv">35</span>%</label><input type="range" id="us" min="0" max="80" value="35"></div>
+      <p class="mut" style="margin-top:10px">Memperbesar tidak bisa menambah detail yang tidak ada di foto asli. Hasilnya lebih halus dan tajam, tapi foto yang sangat kecil tetap terlihat lembut kalau dicetak besar.</p>
+    </div>
+    <div class="card box" id="uprev" hidden><h3>Hasil</h3><div class="pv" id="upv"></div><div class="msg" id="ures"></div></div>
+    <button class="btn p" id="ugo" style="width:100%" disabled>Perbesar</button>
+    <button class="btn" id="usave" style="width:100%;margin-top:10px" disabled>Simpan hasil</button>
+    <div class="msg" id="umsg" role="status"></div>
+  </section>
+  <section id="s-ask" class="scr" hidden>
+    <div class="bar"><button class="bk" data-back aria-label="Kembali">←</button><h2>Tanya Materi</h2><span class="fm">Mode fokus</span></div>
+    <div class="card box" id="anote" hidden><p class="mut"></p></div>
+    <div class="card box">
+      <h3 style="margin-bottom:8px">1. Materi</h3>
+      <div class="btn p pick">+ Pilih PDF atau foto materi<input type="file" id="mf2" accept="application/pdf,.pdf,image/*" multiple aria-label="Pilih materi"></div>
+      <div class="msg" id="minfo">Belum ada materi.</div>
+      <div style="margin-top:10px"><label for="mq">Ketelitian baca foto/scan</label><select id="mq"><option value="1">Cepat</option><option value="2">Teliti (halaman dipotong dua, lebih lama)</option></select></div>
+      <button class="btn p" id="mread" style="width:100%;margin-top:12px" disabled>Baca materi</button>
+      <details id="mdet" hidden style="margin-top:12px"><summary>Lihat hasil bacaan</summary><div id="mtxt"></div></details>
+    </div>
+    <div class="card box">
+      <h3 style="margin-bottom:8px">2. Soal</h3>
+      <textarea id="qt" rows="6" placeholder="Ketik atau tempel soal di sini..."></textarea>
+      <div class="btn pick" style="margin-top:10px">Ambil soal dari foto atau PDF<input type="file" id="qf" accept="application/pdf,.pdf,image/*" multiple aria-label="Ambil soal dari foto atau PDF"></div>
+      <div style="margin-top:10px"><label for="am">Ketelitian jawaban</label><select id="am"><option value="default">Standar</option><option value="complex">Teliti (lebih lama, lebih banyak kuota)</option></select></div>
+    </div>
+    <button class="btn p" id="aans" style="width:100%" disabled>Cari jawaban</button>
+    <div class="msg" id="amsg" role="status">Memakai kuota Claude-mu. AI bisa salah, jadi cek sumbernya (ketuk Hal. dan Par.) sebelum dipakai.</div>
+    <div id="ares" style="margin-top:12px"></div>
+  </section>
 </main>
 
 <nav class="nav box" id="nav" data-t="home" hidden>
@@ -318,7 +368,9 @@ document.querySelectorAll('[data-logo]').forEach(e=>{const s=+e.dataset.logo;e.i
 const ico=p=>`<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
 const FE=[
 {id:'pdf',n:'Foto ke PDF',d:'Gabung foto jadi satu PDF',c:'var(--lime)',on:1,i:'<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M12 12v6M9 15h6"/>'},
+{id:'ask',n:'Tanya Materi',d:'Cari jawaban dari materi, lengkap dengan sumbernya',c:'var(--lil)',on:1,i:'<path d="M5 4h10a4 4 0 0 1 4 4v12l-4-3H5z"/><path d="M9 9h6M9 13h4"/>'},
 {id:'compress',n:'Kompres Foto',d:'Perkecil ukuran foto',c:'var(--pink)',on:1,i:'<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5M9 9l6 6"/>'},
+{id:'upscale',n:'Upscale Foto',d:'Perbesar foto untuk cetak HD sampai 4K',c:'var(--sky)',on:1,i:'<path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/>'},
 {id:'pdf2word',n:'PDF ke Word',d:'Ubah teks PDF jadi dokumen Word',c:'var(--sky)',on:1,i:'<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>'},
 {id:'merge',n:'Gabung PDF',d:'Satukan beberapa PDF',c:'var(--yel)',on:1,i:'<rect x="3" y="4" width="10" height="13" rx="2"/><rect x="11" y="8" width="10" height="13" rx="2"/>'},
 {id:'shrink',n:'Kompres PDF',d:'Pas batas ukuran upload',c:'var(--sky)',on:1,i:'<path d="M7 3h7l5 5v13H7z"/><path d="M10 13l3 3 3-3M13 10v6"/>'},
@@ -327,10 +379,10 @@ const FE=[
 function fc(f){const b=document.createElement('button');b.className='fc box'+(f.on?'':' soon');
  b.innerHTML=`${f.on?'':'<span class="bd">Segera</span>'}<span class="ic">${ico(f.i)}</span><b>${f.n}</b><small>${f.d}</small>`;
  b.onclick=()=>f.on?morph(f.id,b):toast(f.n+' segera hadir');return b;}
-FE.filter(f=>['pdf','pdf2word','merge','sign'].includes(f.id)).forEach(f=>$('quick').appendChild(fc(f)));FE.forEach(f=>$('allf').appendChild(fc(f)));
+FE.filter(f=>['pdf','ask','pdf2word','merge'].includes(f.id)).forEach(f=>$('quick').appendChild(fc(f)));FE.forEach(f=>$('allf').appendChild(fc(f)));
 let tt;function toast(t){const e=$('toast');e.textContent=t;e.hidden=false;clearTimeout(tt);tt=setTimeout(()=>e.hidden=true,1800)}
 let cur='home',lastTab='home';
-function go(s){cur=s;if(s==='home'||s==='menu')lastTab=s;document.querySelectorAll('.scr').forEach(e=>e.hidden=e.id!=='s-'+s);
+function go(s){cur=s;if(s==='home'||s==='menu')lastTab=s;if(s==='ask')askInit();document.querySelectorAll('.scr').forEach(e=>e.hidden=e.id!=='s-'+s);
  const t=s==='home'||s==='menu';$('nav').hidden=!t;$('nav').dataset.t=s;document.body.classList.toggle('focus',!t);$('n-home').className=s==='home'?'on':'';$('n-menu').className=s==='menu'?'on':'';window.scrollTo(0,0);}
 $('n-home').onclick=()=>morph('home');$('n-menu').onclick=()=>morph('menu');
 $('hgo').onclick=()=>morph('pdf',$('hgo'));$('hall').onclick=()=>morph('menu');
@@ -512,8 +564,8 @@ async function needLib(){if(!window.PDFLib)await loadJS(CB+'pdf-lib/1.17.1/pdf-l
 async function needZip(){if(!window.JSZip)await loadJS(CB+'jszip/3.10.1/jszip.min.js')}
 const clean=t=>(t||'').trim().replace(/[\\/:*?"<>|]/g,'_');
 async function saveAs(blob,name,el){const dl=await getDl();if(!dl){el.textContent='Selesai ('+kb(blob.size)+'). '+NODL;return false}await dl.save({filename:name,data:blob});return true}
-async function run(el,btn,fn){btn.disabled=true;el.textContent='Menyiapkan alat...';busyStart(el);
-  try{await fn();busyEnd()}catch(e){busyEnd();const t=e&&(e.name+' '+e.message)||'',dc=e&&e.code==='declined',g=dc?'Penyimpanan dibatalkan.':(/password|encrypt/i.test(t)?'PDF ini diproteksi kata sandi, jadi tidak bisa diproses.':'Gagal. Pastikan file PDF valid dan internet aktif, lalu coba lagi.');el.textContent=g;if(!dc)sorry(g)}
+async function run(el,btn,fn,fm){btn.disabled=true;el.textContent='Menyiapkan alat...';busyStart(el);
+  try{await fn();busyEnd()}catch(e){busyEnd();const t=e&&(e.name+' '+e.message)||'',dc=e&&e.code==='declined',g=dc?'Penyimpanan dibatalkan.':(/password|encrypt/i.test(t)?'PDF ini diproteksi kata sandi, jadi tidak bisa diproses.':(fm||'Gagal. Pastikan file PDF valid dan internet aktif, lalu coba lagi.'));el.textContent=g;if(!dc)sorry(g)}
   btn.disabled=false}
 function rowBtn(t,l,f){const b=document.createElement('button');b.className='mini';b.textContent=t;b.title=l;b.setAttribute('aria-label',l);b.onclick=f;return b}
 /* Gabung PDF */
@@ -589,7 +641,7 @@ function morph(s){go(s)}
 const MAS=m=>MASb(m===true,m==='sad');
 const MASb=(h,sd)=>`<svg viewBox="0 0 100 100" aria-hidden="true"><ellipse cx="50" cy="91" rx="20" ry="3" fill="rgba(18,48,111,.2)"/><path d="M41 80v8M59 80v8" stroke="#1F6FEB" stroke-width="3.4" stroke-linecap="round"/><path d="${h?'M27 52q-9-2-10-11M73 52q9-2 10-11':'M27 58q-7 3-8 10M73 58q7 3 8 10'}" stroke="#1F6FEB" stroke-width="3.4" stroke-linecap="round" fill="none"/><path d="M35 16H55L73 34V72a8 8 0 0 1-8 8H35a8 8 0 0 1-8-8V24a8 8 0 0 1 8-8Z" fill="#fff" stroke="#1F6FEB" stroke-width="3" stroke-linejoin="round"/><path d="M55 16v12a6 6 0 0 0 6 6h12Z" fill="#BBD3FB"/>${h?'<path d="M36.5 51a3.5 3.5 0 0 1 7 0M56.5 51a3.5 3.5 0 0 1 7 0" stroke="#12306F" stroke-width="2.8" stroke-linecap="round" fill="none"/><path d="M43 57h14a7 7 0 0 1-14 0Z" fill="#12306F"/>':sd?'<circle cx="40" cy="51" r="3.4" fill="#12306F"/><circle cx="60" cy="51" r="3.4" fill="#12306F"/><ellipse cx="35.5" cy="57" rx="1.6" ry="2.4" fill="#8FB4FF"/><path d="M44 62a6 6 0 0 1 12 0" fill="none" stroke="#12306F" stroke-width="3" stroke-linecap="round"/>':'<g class="eye"><circle cx="40" cy="50" r="3.4" fill="#12306F"/><circle cx="60" cy="50" r="3.4" fill="#12306F"/></g><path d="M44 58a6 6 0 0 0 12 0" fill="none" stroke="#12306F" stroke-width="3" stroke-linecap="round"/>'}<ellipse cx="34" cy="58" rx="3.8" ry="2.4" fill="#B0C9FF"/><ellipse cx="66" cy="58" rx="3.8" ry="2.4" fill="#B0C9FF"/></svg>`;
 $('mas').innerHTML=MAS(false);
-const hr=new Date().getHours(),SAY=[hr<11?'Pagi! Semangat ya, ada tugas hari ini?':hr<15?'Siang! Yuk beresin tugasnya.':hr<19?'Sore! Sat set biar cepat kelar.':'Malam! Beresin sekarang, tidur jadi nyenyak.','Sat set, ayo beresin!','Foto tugas? Jadiin PDF aja.','Mau tanda tangan atau gabung PDF? Bisa!','Aku siap bantu kapan aja.'];let si=0;
+const hr=new Date().getHours(),SAY=[hr<11?'Pagi! Semangat ya, ada tugas hari ini?':hr<15?'Siang! Yuk beresin tugasnya.':hr<19?'Sore! Sat set biar cepat kelar.':'Malam! Beresin sekarang, tidur jadi nyenyak.','Sat set, ayo beresin!','Foto tugas? Jadiin PDF aja.','Foto burem? Upscale dulu sebelum dicetak.','Mau tanda tangan atau gabung PDF? Bisa!','Materi numpuk? Tanya Materi bisa cari jawabannya.','Aku siap bantu kapan aja.'];let si=0;
 function say(t){const e=$('say');e.textContent=t;e.classList.remove('pp');void e.offsetWidth;e.classList.add('pp')}
 say(SAY[0]);
 $('mas').onclick=()=>{const m=$('mas');m.classList.remove('jump');void m.offsetWidth;m.classList.add('jump');si=(si+1)%SAY.length;say(SAY[si]);if(navigator.vibrate)try{navigator.vibrate(15)}catch(e){}};
@@ -613,8 +665,9 @@ function celebrate(name,size){
 const RUN=()=>`<svg viewBox="0 -16 120 116" aria-hidden="true"><g class="rl"><path d="M2 40h14M0 52h18M4 64h12" stroke="#1F6FEB" stroke-opacity=".5" stroke-width="3.4" stroke-linecap="round"/></g><ellipse cx="60" cy="92" rx="24" ry="3" fill="rgba(18,48,111,.2)"/><g transform="translate(10 0)"><g class="bob"><path class="lgA" d="M41 80v9" stroke="#1F6FEB" stroke-width="3.4" stroke-linecap="round"/><path class="lgB" d="M59 80v9" stroke="#1F6FEB" stroke-width="3.4" stroke-linecap="round"/><path d="M27 54Q14 44 24 12M73 54Q86 44 76 12" stroke="#1F6FEB" stroke-width="3.4" stroke-linecap="round" fill="none"/><path d="M35 16H55L73 34V72a8 8 0 0 1-8 8H35a8 8 0 0 1-8-8V24a8 8 0 0 1 8-8Z" fill="#fff" stroke="#1F6FEB" stroke-width="3" stroke-linejoin="round"/><path d="M55 16v12a6 6 0 0 0 6 6h12Z" fill="#BBD3FB"/><g class="eye"><circle cx="40" cy="50" r="3.4" fill="#12306F"/><circle cx="60" cy="50" r="3.4" fill="#12306F"/></g><path d="M45 57a5 5 0 0 0 10 0" fill="none" stroke="#12306F" stroke-width="3" stroke-linecap="round"/><ellipse cx="34" cy="58" rx="3.8" ry="2.4" fill="#B0C9FF"/><ellipse cx="66" cy="58" rx="3.8" ry="2.4" fill="#B0C9FF"/><g class="stk"><rect x="29" y="8" width="42" height="8" rx="2" fill="#fff" stroke="#1F6FEB" stroke-width="2.4"/><rect x="33" y="0" width="36" height="8" rx="2" fill="#BBD3FB" stroke="#1F6FEB" stroke-width="2.4"/><rect x="27" y="-8" width="40" height="8" rx="2" fill="#fff" stroke="#1F6FEB" stroke-width="2.4"/></g></g></g></svg>`;
 let bzO=null,bzM=null;
 function busyEnd(){if(bzM){bzM.disconnect();bzM=null}if(bzO){bzO.remove();bzO=null}}
-function busyStart(el){busyEnd();const o=document.createElement('div');o.className='bz';o.setAttribute('role','status');
+function busyStart(el,cb){busyEnd();const o=document.createElement('div');o.className='bz';o.setAttribute('role','status');
   o.innerHTML='<div class="oc bc"><div class="rv">'+RUN()+'</div><p class="bt"></p><p class="mut">Sabar ya, lagi sat set...</p></div>';
+  if(cb){const b=document.createElement('button');b.className='btn';b.textContent='Batal';b.style.cssText='width:100%;margin-top:12px';b.onclick=cb;o.querySelector('.oc').appendChild(b)}
   const bt=o.querySelector('.bt'),sync=()=>{bt.textContent=el.textContent||'Menyiapkan...'};sync();
   bzM=new MutationObserver(sync);bzM.observe(el,{childList:true,characterData:true,subtree:true});bzO=o;document.body.appendChild(o)}
 function sorry(msg){const old=$('ov');if(old)old.remove();const o=document.createElement('div');o.id='ov';o.className='ov';o.setAttribute('role','alertdialog');
@@ -643,6 +696,145 @@ window.addEventListener('popstate',()=>{
 });
 document.addEventListener('pointerdown',()=>{if(exiting)exiting=false;if(depth<3)push()},true);
 try{history.pushState({ss:1},'','#app')}catch(e){}
+/* Upscale Foto */
+let UP=null,UB=null;
+async function sharpen(c,a){const W=c.width,H=c.height,x=c.getContext('2d'),s=x.getImageData(0,0,W,H).data,out=x.createImageData(W,H),o=out.data,W4=W*4;
+  for(let y=0;y<H;y++){if(y%300===0)await tick();
+    for(let xx=0;xx<W;xx++){const i=(y*W+xx)*4,edge=y===0||xx===0||y===H-1||xx===W-1;
+      for(let ch=0;ch<3;ch++){const j=i+ch;if(edge){o[j]=s[j];continue}
+        const v=s[j]*(1+4*a)-a*(s[j-4]+s[j+4]+s[j-W4]+s[j+W4]);o[j]=v<0?0:v>255?255:v}
+      o[i+3]=255}}
+  x.putImageData(out,0,0)}
+$('us').oninput=()=>{$('usv').textContent=$('us').value};
+$('uf').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;$('uinfo').textContent='Membuka foto...';
+  const img=await new Promise(res=>{const fr=new FileReader();fr.onerror=()=>res(null);fr.onload=()=>{const im=new Image();im.onerror=()=>res(null);im.onload=()=>res(im);im.src=fr.result};fr.readAsDataURL(f)});
+  if(!img){$('uinfo').textContent='Foto tidak bisa dibuka.';return}
+  UP={img,name:clean(f.name.replace(/\.[^.]+$/,''))||'foto',w:img.naturalWidth,h:img.naturalHeight};UB=null;
+  $('uinfo').textContent=f.name+' · '+UP.w+'×'+UP.h+' px ('+(UP.w*UP.h/1e6).toFixed(1).replace('.',',')+' MP)';
+  $('ugo').disabled=false;$('usave').disabled=true;$('uprev').hidden=true;$('umsg').textContent=''};
+$('ugo').onclick=()=>run($('umsg'),$('ugo'),async()=>{const m=$('umsg');await tick();
+  const T=+$('ut').value,k=T/Math.max(UP.w,UP.h),sh=+$('us').value/100,up=k>1;
+  let c=document.createElement('canvas');c.width=UP.w;c.height=UP.h;c.getContext('2d').drawImage(UP.img,0,0);
+  if(up){const tw=Math.round(UP.w*k),th=Math.round(UP.h*k);
+    while(c.width<tw||c.height<th){const nw=Math.min(tw,Math.round(c.width*2)),nh=Math.min(th,Math.round(c.height*2));
+      m.textContent='Memperbesar ke '+nw+'×'+nh+'...';await tick();
+      const n=document.createElement('canvas');n.width=nw;n.height=nh;const nx=n.getContext('2d');nx.imageSmoothingEnabled=true;nx.imageSmoothingQuality='high';nx.drawImage(c,0,0,nw,nh);c=n}}
+  if(sh>0){m.textContent='Mempertajam...';await tick();await sharpen(c,sh)}
+  m.textContent='Menyimpan hasil...';await tick();
+  const png=$('uo').value==='png';
+  UB=await new Promise(r=>c.toBlob(r,png?'image/png':'image/jpeg',.95));if(!UB)throw new Error('blob');
+  UP.ext=png?'png':'jpg';UP.ow=c.width;UP.oh=c.height;
+  const pk=Math.min(1,600/Math.max(c.width,c.height)),pc=document.createElement('canvas');pc.width=Math.round(c.width*pk);pc.height=Math.round(c.height*pk);pc.getContext('2d').drawImage(c,0,0,pc.width,pc.height);
+  $('upv').innerHTML='';$('upv').appendChild(pc);
+  const L=Math.max(c.width,c.height),cm=v=>Math.round(L/v*2.54);
+  $('ures').textContent=UP.w+'×'+UP.h+' → '+c.width+'×'+c.height+' px ('+(up?k.toFixed(1).replace('.',',')+'× lebih besar':'foto asli sudah lebih besar dari target, ukurannya tidak diubah')+'), '+kb(UB.size)+'. Cukup untuk cetak sisi panjang ±'+cm(300)+' cm (sangat tajam, 300 dpi) atau ±'+cm(200)+' cm (nyaman, 200 dpi).'+(k>3?' Peringatan: foto asli kecil, hasil cetak besar tetap terlihat lembut.':'');
+  $('uprev').hidden=false;$('usave').disabled=false;m.textContent='Selesai diproses. Cek hasilnya, lalu simpan.';
+},'Gagal memperbesar foto. Coba target yang lebih kecil (misalnya Full HD) atau foto yang lebih kecil.');
+$('usave').onclick=()=>run($('umsg'),$('usave'),async()=>{if(!UB)return;const m=$('umsg');
+  if(await saveAs(UB,UP.name+'-'+UP.ow+'x'+UP.oh+'.'+UP.ext,m))m.textContent='Selesai. Foto siap cetak tersimpan ('+kb(UB.size)+').'});
+/* Tanya Materi */
+let AS=null,AU={files:[],pdf:null,imgs:[]},MAT=[];
+async function getSample(){if(AS)return AS;try{AS=window.claude&&window.claude.use?await window.claude.use('sample'):null}catch(e){AS=null}return AS}
+async function askInit(){const sm=await getSample(),n=$('anote');n.hidden=!!sm&&true;
+  if(!sm){n.hidden=false;n.querySelector('p').textContent='Fitur ini butuh Claude. Buka SatSet lewat tautan claude.ai (bukan versi GitHub) dan izinkan akses Claude saat diminta.'}}
+function sErr(e){const c=e&&e.code;return({cancelled:'Dibatalkan.',not_granted:'Izin memakai Claude belum diberikan. Coba lagi dan pilih Izinkan.',sampling_disabled:'Claude tidak tersedia untuk akunmu.',rate_limited:'Terlalu sering atau batas pemakaian Claude-mu habis. Coba lagi nanti.',prompt_too_large:'Materi atau soal terlalu panjang. Pisahkan PDF-nya (pakai Pisah PDF) atau kurangi isinya.',images_unavailable:'Versi ini belum bisa mengirim gambar ke Claude.',image_rejected:'Gambarnya ditolak (terlalu besar atau formatnya tidak didukung).',refused:'Claude tidak bisa memproses isi ini.',invalid_json:'Balasan Claude tidak terbaca rapi. Coba lagi.',empty_completion:'Claude tidak memberi balasan. Coba lagi.',session_expired:'Sesi Claude habis. Masuk lagi lalu coba lagi.',too_many:'Materi lebih dari 60 halaman. Pisahkan dulu pakai Pisah PDF.',no_text:'Tidak ada teks yang terbaca dari materi. Coba foto yang lebih jelas, atau pilih ketelitian Teliti.'})[c]||(e&&e.name==='PasswordException'?'PDF ini diproteksi kata sandi.':'Terjadi gangguan. Coba lagi.')}
+function asyncState(){$('mread').disabled=!AU.files.length;$('aans').disabled=!(MAT.some(m=>m.paras.length)&&$('qt').value.trim())}
+async function aRun(el,btn,fn){const sm=await getSample();if(!sm){el.textContent='Fitur ini butuh Claude (lihat catatan di atas).';return}
+  const ctl=new AbortController();btn.disabled=true;busyStart(el,()=>ctl.abort());
+  try{await fn(sm,ctl.signal);busyEnd()}catch(e){busyEnd();const t=sErr(e);el.textContent=t;if(!e||e.code!=='cancelled')sorry(t)}
+  btn.disabled=false;asyncState()}
+function textParas(tc){
+  const its=tc.items.filter(i=>i.str).map(i=>({s:i.str,x:i.transform[4],y:i.transform[5],h:Math.abs(i.transform[3])||i.height||10,w:i.width||0})).sort((a,b)=>b.y-a.y),raw=[];
+  its.forEach(it=>{const l=raw[raw.length-1];if(l&&Math.abs(l.y-it.y)<=Math.max(2,it.h*.5))l.it.push(it);else raw.push({y:it.y,it:[it]})});
+  const lines=raw.map(l=>{l.it.sort((a,b)=>a.x-b.x);let t='',p=null;l.it.forEach(i=>{if(p&&i.x-(p.x+p.w)>.2*i.h&&!/\s$/.test(t)&&!/^\s/.test(i.s))t+=' ';t+=i.s;p=i});
+    return{y:l.y,x0:l.it[0].x,x1:Math.max(...l.it.map(i=>i.x+i.w)),h:Math.max(...l.it.map(i=>i.h)),t:t.trim()}}).filter(l=>l.t);
+  const out=[];if(!lines.length)return out;const mn=Math.min(...lines.map(l=>l.x0)),mx=Math.max(...lines.map(l=>l.x1));
+  lines.forEach((l,i)=>{const pv=lines[i-1];if(!pv||pv.y-l.y>1.6*Math.max(pv.h,l.h)||pv.x1<mn+.72*(mx-mn))out.push(l.t);else out[out.length-1]+=' '+l.t});
+  return out}
+async function pageCanvas(n,long){
+  if(AU.pdf){const pg=await AU.pdf.getPage(n),v1=pg.getViewport({scale:1}),v=pg.getViewport({scale:Math.min(4,long/Math.max(v1.width,v1.height))}),c=document.createElement('canvas');c.width=Math.round(v.width);c.height=Math.round(v.height);
+    const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);await pg.render({canvasContext:x,viewport:v}).promise;return c}
+  return AU.imgs[n-1].src}
+function region(c,y0,h,maxLong){const k=Math.min(1,maxLong/Math.max(c.width,h)),t=document.createElement('canvas');t.width=Math.round(c.width*k);t.height=Math.round(h*k);t.getContext('2d').drawImage(c,0,y0,c.width,h,0,0,t.width,t.height);return new Promise(r=>t.toBlob(r,'image/jpeg',.85))}
+async function pageBlobs(n,parts){const c=await pageCanvas(n,parts>1?2600:1800);
+  if(parts<2)return[await region(c,0,c.height,1800)];
+  const h=Math.round(c.height*.54);return[await region(c,0,h,1800),await region(c,c.height-h,h,1800)]}
+const isPdf=f=>/pdf/i.test(f.type)||/\.pdf$/i.test(f.name);
+$('mf2').onchange=e=>{const fs=[...e.target.files];e.target.value='';if(!fs.length)return;const p=fs.find(isPdf);
+  AU.files=p?[p]:fs.filter(f=>f.type.startsWith('image/'));AU.pdf=null;AU.imgs=[];MAT=[];$('mdet').hidden=true;
+  $('minfo').textContent=AU.files.length?(p?p.name:AU.files.length+' foto')+' · belum dibaca':'File tidak didukung.';asyncState()};
+$('qt').oninput=asyncState;
+$('mread').onclick=()=>aRun($('minfo'),$('mread'),async(sm,sig)=>{
+  const info=$('minfo'),parts=+$('mq').value;MAT=[];AU.pdf=null;AU.imgs=[];let total;
+  if(isPdf(AU.files[0])){info.textContent='Membuka PDF...';await needPdfjs();AU.pdf=await pdfjsLib.getDocument({data:await AU.files[0].arrayBuffer()}).promise;total=AU.pdf.numPages}
+  else{for(let i=0;i<AU.files.length;i++){info.textContent='Membuka foto '+(i+1)+' dari '+AU.files.length+'...';const it=await load(AU.files[i]);if(!it)throw{code:'image_rejected'};AU.imgs.push(it)}total=AU.imgs.length}
+  if(total>60)throw{code:'too_many'};
+  const scan=[];
+  for(let n=1;n<=total;n++){info.textContent='Memeriksa halaman '+n+' dari '+total+'...';await tick();
+    const ps=AU.pdf?textParas(await(await AU.pdf.getPage(n)).getTextContent()):[];
+    if(ps.join('').length>=40)MAT.push({page:n,paras:ps,src:'teks'});else{MAT.push({page:n,paras:[],src:'scan'});scan.push(n)}}
+  if(scan.length){
+    const L=await sm.limits().catch(()=>null);if(!L||!L.images)throw{code:'images_unavailable'};
+    const per=Math.max(1,Math.floor(Math.min(L.images.maxCount,6)/parts));
+    for(let i=0;i<scan.length;i+=per){const grp=scan.slice(i,i+per);
+      info.textContent='Membaca foto/scan halaman '+grp[0]+(grp.length>1?'–'+grp[grp.length-1]:'')+' ('+Math.min(i+per,scan.length)+' dari '+scan.length+')...';
+      const blobs=[],desc=[];
+      for(const n of grp){const bl=await pageBlobs(n,parts);bl.forEach((b,k)=>{blobs.push(b);desc.push('Gambar '+blobs.length+' = halaman '+n+(parts>1?(k?' bagian BAWAH':' bagian ATAS'):''))})}
+      const prompt='Kamu membaca halaman materi pelajaran yang berupa foto atau scan. '+desc.join('; ')+'. '+(parts>1?'Bagian atas dan bawah satu halaman saling tumpang tindih sedikit: gabungkan jadi satu halaman utuh tanpa mengulang teks. ':'')+'Salin SEMUA teks yang terlihat secara setia: jangan meringkas, jangan menambah, pertahankan bahasa aslinya, termasuk judul, daftar, isi tabel (baris demi baris), keterangan gambar, dan rumus. Bagi tiap halaman menjadi paragraf atau blok teks berurutan dari atas ke bawah. Jika ada bagian tidak terbaca, tulis [tidak terbaca]. Balas HANYA JSON berbentuk [{"page":<nomor halaman>,"paragraphs":["...","..."]}] dengan satu objek per halaman.';
+      const r=await sm.json(prompt,{images:blobs,modelTier:'quick',signal:sig,cache:false});
+      (Array.isArray(r)?r:[]).forEach(o=>{const m=MAT.find(x=>x.page===+o.page);if(m&&Array.isArray(o.paragraphs))m.paras=o.paragraphs.map(String).filter(s=>s.trim())})}}
+  const ok=MAT.filter(m=>m.paras.length),empty=MAT.filter(m=>!m.paras.length).map(m=>m.page);
+  info.textContent=ok.length+' dari '+total+' halaman terbaca ('+MAT.filter(m=>m.src==='teks').length+' dari teks PDF, '+scan.length+' dari foto/scan).'+(empty.length?' Halaman tanpa teks: '+empty.join(', ')+'.':'');
+  const T=$('mtxt');T.innerHTML='';MAT.forEach(m=>{if(!m.paras.length)return;const b=document.createElement('b');b.textContent='Halaman '+m.page;T.appendChild(b);m.paras.forEach((p,i)=>{const d=document.createElement('div');d.textContent='¶'+(i+1)+' '+p;T.appendChild(d)})});
+  $('mdet').hidden=!ok.length;
+  if(!ok.length)throw{code:'no_text'}});
+function readyText(){let t='';MAT.forEach(m=>{if(m.paras.length){t+='\n=== HALAMAN '+m.page+' ===\n';m.paras.forEach((p,i)=>{t+='[H'+m.page+'¶'+(i+1)+'] '+p+'\n'})}});return t}
+$('qf').onchange=e=>{const fs=[...e.target.files];e.target.value='';if(fs.length)aRun($('amsg'),$('aans'),async(sm,sig)=>{
+  const m=$('amsg'),blobs=[];let txt=[];
+  const p=fs.find(isPdf);
+  if(p){m.textContent='Membuka PDF soal...';await needPdfjs();const d=await pdfjsLib.getDocument({data:await p.arrayBuffer()}).promise;if(d.numPages>10)throw{code:'too_many'};
+    for(let n=1;n<=d.numPages;n++){const pg=await d.getPage(n),ps=textParas(await pg.getTextContent());
+      if(ps.join('').length>=40)txt.push(ps.join('\n'));
+      else{const v1=pg.getViewport({scale:1}),v=pg.getViewport({scale:Math.min(4,1800/Math.max(v1.width,v1.height))}),c=document.createElement('canvas');c.width=Math.round(v.width);c.height=Math.round(v.height);const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);await pg.render({canvasContext:x,viewport:v}).promise;blobs.push(await new Promise(r=>c.toBlob(r,'image/jpeg',.85)))}}}
+  else for(const f of fs.filter(f=>f.type.startsWith('image/'))){const it=await load(f);if(!it)throw{code:'image_rejected'};blobs.push(await new Promise(r=>it.src.toBlob(r,'image/jpeg',.85)))}
+  if(blobs.length){const L=await sm.limits().catch(()=>null);if(!L||!L.images)throw{code:'images_unavailable'};const per=Math.max(1,Math.min(L.images.maxCount,6));
+    for(let i=0;i<blobs.length;i+=per){m.textContent='Membaca soal dari gambar ('+Math.min(i+per,blobs.length)+' dari '+blobs.length+')...';
+      const r=await sm('Gambar-gambar ini berisi soal ujian atau tugas (berurutan). Salin semua soal secara setia apa adanya, termasuk nomor soal, petunjuk, tabel atau data yang menjadi bagian soal, dan pilihan jawaban (A, B, C, D, dst.). Jangan menjawab dan jangan menambah apa pun. Pisahkan antar soal dengan satu baris kosong. Jika ada bagian tidak terbaca, tulis [tidak terbaca]. Balas hanya dengan teks soal.',{images:blobs.slice(i,i+per),modelTier:'quick',signal:sig,cache:false});
+      txt.push(r.text.trim())}}
+  const add=txt.join('\n\n').trim();if(!add)throw{code:'empty_completion'};
+  $('qt').value=($('qt').value.trim()?$('qt').value.trim()+'\n\n':'')+add;m.textContent='Soal terbaca. Periksa dan koreksi dulu kalau ada yang salah, lalu ketuk Cari jawaban.'})};
+const norm=t=>String(t).toLowerCase().replace(/\s+/g,' ').replace(/[^\p{L}\p{N} ]/gu,'').trim();
+const pOf=(h,p)=>{const m=MAT.find(x=>x.page===+h);return m&&m.paras[+p-1]};
+const mk=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+async function viewPage(h,p){
+  const o=mk('div','ov');o.id='ov';o.style.cssText='align-items:flex-start;overflow:auto';
+  const c=mk('div','oc');c.style.cssText='width:min(560px,100%);margin:auto;text-align:left';
+  c.append(mk('h3','','Halaman '+h));
+  const para=pOf(h,p);if(para){c.append(mk('p','sh','Paragraf '+p+' (hasil bacaan):'),mk('div','hl',para))}
+  try{const src=await pageCanvas(+h,1100),cv=document.createElement('canvas');cv.width=src.width;cv.height=src.height;cv.getContext('2d').drawImage(src,0,0);cv.style.cssText='width:100%;height:auto;margin-top:10px;border-radius:12px;border:1px solid var(--gb);background:#fff';c.append(cv)}catch(e){}
+  const b=mk('button','btn p','Tutup');b.style.cssText='width:100%;margin-top:12px';b.onclick=()=>o.remove();c.append(b);o.append(c);o.onclick=e=>{if(e.target===o)o.remove()};document.body.appendChild(o)}
+function showRes(list){const R=$('ares');R.innerHTML='';
+  list.forEach((r,i)=>{const c=mk('div','card box'),hd=mk('div');hd.style.cssText='display:flex;justify-content:space-between;align-items:center;gap:8px';
+    hd.append(mk('h3','','Soal '+(r.no||i+1)),mk('span','badge',({tinggi:'Yakin',sedang:'Cukup yakin',rendah:'Kurang yakin'})[r.keyakinan]||'Cek manual'));
+    c.append(hd,mk('p','qt',String(r.soal||'')));
+    if(r.found===false){c.append(mk('div','warn','Jawabannya tidak ditemukan di materi. '+String(r.alasan||'')));if(r.umum)c.append(mk('div','warn','Dari pengetahuan umum, bukan dari materi (cek lagi): '+String(r.umum)))}
+    else{c.append(mk('div','ans',String(r.jawaban||'')),mk('h4','sh','Kenapa jawabannya begitu'),mk('p','',String(r.alasan||'')))}
+    const src=Array.isArray(r.sumber)?r.sumber:[];
+    if(src.length){c.append(mk('h4','sh','Sumber di materi (ketuk untuk melihat halamannya)'));
+      src.forEach(s=>{const para=pOf(s.halaman,s.paragraf),q=String(s.kutipan||''),ok=!!(para&&q&&norm(para).includes(norm(q)));
+        const b=mk('button','chip','Hal. '+s.halaman+' · Par. '+s.paragraf+' '+(para?(ok?'✓':'⚠'):'✗'));b.onclick=()=>viewPage(s.halaman,s.paragraf);
+        c.append(b,mk('p','sq','“'+q+'” — '+(ok?'kutipan cocok dengan materi.':para?'kutipan tidak persis sama, cek manual.':'rujukan tidak ditemukan, abaikan.')))})}
+    else if(r.found!==false)c.append(mk('div','warn','Tidak ada rujukan ke materi. Cek manual jawaban ini.'));
+    R.append(c)});
+  R.scrollIntoView({behavior:'smooth',block:'start'})}
+$('aans').onclick=()=>aRun($('amsg'),$('aans'),async(sm,sig)=>{
+  const q=$('qt').value.trim(),mat=readyText();if(!q||!mat)return;
+  if(mat.length>230000||q.length>20000)throw{code:'prompt_too_large'};
+  $('amsg').textContent='Mencocokkan soal dengan materi...';
+  const prompt='Kamu asisten belajar. Jawab soal HANYA berdasarkan MATERI di bawah. Materi dibagi per halaman dan paragraf, ditandai [H<halaman>¶<paragraf>].\nAturan:\n- Jawab dari materi saja. Jika jawabannya tidak ada atau kurang di materi, isi "found":false, jelaskan singkat apa yang kurang di "alasan", dan JANGAN mengarang. Boleh isi "umum" dengan jawaban dari pengetahuan umum, yang akan ditampilkan dengan label bahwa itu di luar materi.\n- Untuk pilihan ganda, sebut huruf dan isi pilihan yang benar.\n- "alasan": jelaskan penalarannya langkah demi langkah dengan bahasa sederhana supaya pengguna paham dan bisa memeriksanya.\n- "sumber": daftar bukti dari materi, masing-masing {"halaman":n,"paragraf":m,"kutipan":"kutipan pendek persis dari materi, maksimal 25 kata"}. Nomor halaman dan paragraf harus sama dengan penanda di materi.\n- "keyakinan": "tinggi", "sedang", atau "rendah".\n- Pakai bahasa yang sama dengan soal. Jika ada beberapa soal, jawab semuanya, satu objek per soal.\nBalas HANYA JSON: {"hasil":[{"no":"1","soal":"...","jawaban":"...","alasan":"...","sumber":[{"halaman":1,"paragraf":1,"kutipan":"..."}],"keyakinan":"tinggi","found":true,"umum":""}]}\n\nMATERI:\n'+mat+'\n\nSOAL:\n'+q;
+  const r=await sm.json(prompt,{modelTier:$('am').value,signal:sig,cache:false});
+  const list=Array.isArray(r)?r:(r&&Array.isArray(r.hasil)?r.hasil:null);if(!list||!list.length)throw{code:'invalid_json'};
+  showRes(list);$('amsg').textContent='Selesai. Cek sumbernya dengan mengetuk Hal. dan Par. di setiap jawaban.'});
 render();
 if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0)navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
